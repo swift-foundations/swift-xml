@@ -38,7 +38,7 @@ extension XML.Serializable {
     /// Creates a value from async XML bytes.
     @inlinable
     public init<S: AsyncSequence & Sendable>(
-        collectingXML bytes: S
+        collecting bytes: S
     ) async throws(XML.Error)
     where S.Element == UInt8 {
         let doc = try await XML.parse(collecting: bytes)
