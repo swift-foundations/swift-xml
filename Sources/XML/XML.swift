@@ -22,13 +22,22 @@
 /// ## Access
 ///
 /// ```swift
-/// // Dynamic member lookup
-/// xml.item.get.text        // Optional("Hello")
-/// xml.item.get.attribute("id")  // Optional("123")
+/// // Text extraction via String initializer
+/// String(xml.user.name)              // "John"
+/// Int(xml.user.age)                  // Optional(30)
 ///
-/// // Subscript access
-/// xml["item"].get.text
-/// xml["items"][0].get.name
+/// // Dynamic member lookup for navigation
+/// xml.user.name                      // XML element
+/// xml["user"]["name"]                // Same via subscript
+///
+/// // Attributes
+/// xml.user.attributes["id"]          // Optional("123")
+/// xml.user.attributes.all            // ["id": "123", ...]
+///
+/// // Children
+/// xml.items.children()               // [XML] - all children
+/// xml.items.children.named("item")   // [XML] - filtered
+/// xml.items.children.first("item")   // XML? - first match
 /// ```
 ///
 /// ## Serialization
@@ -107,150 +116,6 @@ extension XML {
     }
 }
 
-// MARK: - Get Accessor
-
-extension XML {
-    /// Value access through the `get` accessor.
-    public struct Get: Sendable {
-        @usableFromInline
-        let xml: XML
-
-        @usableFromInline
-        init(xml: XML) {
-            self.xml = xml
-        }
-
-        /// Element name (local part).
-        @inlinable
-        public var name: String {
-            xml.raw.name.local
-        }
-
-        /// Qualified name (prefix:local).
-        @inlinable
-        public var qualified: String {
-            xml.raw.name.qualified
-        }
-
-        /// Namespace prefix.
-        @inlinable
-        public var prefix: String? {
-            xml.raw.name.prefix
-        }
-
-        /// Text content (direct text only).
-        @inlinable
-        public var text: String? {
-            let t = xml.raw.textContent
-            return t.isEmpty ? nil : t
-        }
-
-        /// All text content including nested elements.
-        @inlinable
-        public var allText: String {
-            collectAllText(xml.raw)
-        }
-
-        /// Child elements.
-        @inlinable
-        public var children: [XML] {
-            xml.raw.children.map(XML.init)
-        }
-
-        /// Attributes as dictionary.
-        @inlinable
-        public var attributes: [String: String] {
-            var dict: [String: String] = [:]
-            for attr in xml.raw.attributes {
-                dict[attr.name.qualified] = attr.value
-            }
-            return dict
-        }
-
-        /// Gets a specific attribute by name.
-        @inlinable
-        public func attribute(_ name: String) -> String? {
-            xml.raw.attribute(name)
-        }
-
-        /// Collects all text from an element and its descendants.
-        @usableFromInline
-        internal func collectAllText(_ element: W3C_XML.Element) -> String {
-            var result = ""
-            for content in element.content {
-                switch content {
-                case .text(let t):
-                    result += t
-                case .cdata(let c):
-                    result += c
-                case .element(let e):
-                    result += collectAllText(e)
-                default:
-                    break
-                }
-            }
-            return result
-        }
-    }
-
-    /// Access element properties through the `get` accessor.
-    @inlinable
-    public var get: Get {
-        Get(xml: self)
-    }
-}
-
-// MARK: - Query Accessor
-
-extension XML {
-    /// Query access through the `query` accessor.
-    public struct Query: Sendable {
-        @usableFromInline
-        let xml: XML
-
-        @usableFromInline
-        init(xml: XML) {
-            self.xml = xml
-        }
-
-        /// Finds the first child element by name.
-        @inlinable
-        public func child(_ name: String) -> XML? {
-            xml.raw.child(name).map(XML.init)
-        }
-
-        /// Finds all child elements by name.
-        @inlinable
-        public func children(_ name: String) -> [XML] {
-            xml.raw.children(name).map(XML.init)
-        }
-
-        /// Finds the first descendant by name.
-        @inlinable
-        public func descendant(_ name: String) -> XML? {
-            xml.raw.descendant(name).map(XML.init)
-        }
-
-        /// Finds all descendants by name.
-        @inlinable
-        public func descendants(_ name: String) -> [XML] {
-            xml.raw.descendants(name).map(XML.init)
-        }
-
-        /// Finds elements matching a predicate.
-        @inlinable
-        public func filter(_ predicate: (XML) -> Bool) -> [XML] {
-            xml.get.children.filter(predicate)
-        }
-    }
-
-    /// Query element structure through the `query` accessor.
-    @inlinable
-    public var query: Query {
-        Query(xml: self)
-    }
-}
-
 // MARK: - Subscripts
 
 extension XML {
@@ -259,7 +124,7 @@ extension XML {
     /// Returns an empty XML element if not found (allows safe chaining).
     @inlinable
     public subscript(name: String) -> XML {
-        query.child(name) ?? XML(W3C_XML.Element(name: "_null"))
+        raw.child(name).map(XML.init) ?? XML(W3C_XML.Element(name: "_null"))
     }
 
     /// Accesses a child element by index.
@@ -267,11 +132,11 @@ extension XML {
     /// Returns an empty XML element if out of bounds.
     @inlinable
     public subscript(index: Int) -> XML {
-        let children = get.children
-        guard index >= 0 && index < children.count else {
+        let allChildren = raw.children
+        guard index >= 0 && index < allChildren.count else {
             return XML(W3C_XML.Element(name: "_null"))
         }
-        return children[index]
+        return XML(allChildren[index])
     }
 }
 
