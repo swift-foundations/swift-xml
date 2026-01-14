@@ -21,11 +21,12 @@ extension XML {
     ///     }
     ///
     ///     static func deserialize(_ xml: XML) throws(XML.Error) -> Person {
-    ///         guard let name = xml.query.child("name")?.get.text else {
+    ///         guard let nameXML = xml.children.first["name"],
+    ///               let name = String?(nameXML) else {
     ///             throw .elementNotFound(name: "name")
     ///         }
-    ///         guard let ageStr = xml.query.child("age")?.get.text,
-    ///               let age = Int(ageStr) else {
+    ///         guard let ageXML = xml.children.first["age"],
+    ///               let age = Int(ageXML) else {
     ///             throw .elementNotFound(name: "age")
     ///         }
     ///         return Person(name: name, age: age)
@@ -94,10 +95,7 @@ extension String: XML.Serializable {
 
     @inlinable
     public static func deserialize(_ xml: XML) throws(XML.Error) -> String {
-        guard let text = xml.get.text else {
-            return ""
-        }
-        return text
+        String(xml)
     }
 }
 
@@ -111,9 +109,8 @@ extension Int: XML.Serializable {
 
     @inlinable
     public static func deserialize(_ xml: XML) throws(XML.Error) -> Int {
-        guard let text = xml.get.text,
-              let value = Int(text) else {
-            throw .typeMismatch(expected: "integer", got: xml.get.text ?? "nil")
+        guard let value = Int(xml) else {
+            throw .typeMismatch(expected: "integer", got: xml.text())
         }
         return value
     }
@@ -129,9 +126,8 @@ extension Double: XML.Serializable {
 
     @inlinable
     public static func deserialize(_ xml: XML) throws(XML.Error) -> Double {
-        guard let text = xml.get.text,
-              let value = Double(text) else {
-            throw .typeMismatch(expected: "real", got: xml.get.text ?? "nil")
+        guard let value = Double(xml) else {
+            throw .typeMismatch(expected: "real", got: xml.text())
         }
         return value
     }
@@ -147,20 +143,15 @@ extension Bool: XML.Serializable {
 
     @inlinable
     public static func deserialize(_ xml: XML) throws(XML.Error) -> Bool {
-        let name = xml.get.name
-        switch name {
+        switch xml.element.name {
         case "true": return true
         case "false": return false
         default:
             // Also check text content
-            if let text = xml.get.text?.lowercased() {
-                switch text {
-                case "true", "yes", "1": return true
-                case "false", "no", "0": return false
-                default: break
-                }
+            if let value = Bool(xml) {
+                return value
             }
-            throw .typeMismatch(expected: "boolean", got: name)
+            throw .typeMismatch(expected: "boolean", got: xml.element.name)
         }
     }
 }
@@ -180,7 +171,7 @@ extension Optional: XML.Serializable where Wrapped: XML.Serializable {
 
     @inlinable
     public static func deserialize(_ xml: XML) throws(XML.Error) -> Optional<Wrapped> {
-        if xml.get.name == "null" || xml.isNull {
+        if xml.element.name == "null" || xml.isNull {
             return nil
         }
         return try Wrapped.deserialize(xml)
@@ -197,9 +188,10 @@ extension Array: XML.Serializable where Element: XML.Serializable {
 
     @inlinable
     public static func deserialize(_ xml: XML) throws(XML.Error) -> Array<Element> {
+        let allChildren = xml.children()
         var result: [Element] = []
-        result.reserveCapacity(xml.get.children.count)
-        for child in xml.get.children {
+        result.reserveCapacity(allChildren.count)
+        for child in allChildren {
             result.append(try Element.deserialize(child))
         }
         return result

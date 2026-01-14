@@ -14,23 +14,23 @@ struct XMLWrapperTests {
             </root>
             """)
 
-        #expect(doc.root.user.name.get.text == "John")
-        #expect(doc.root.user.email.get.text == "john@example.com")
+        #expect(String(doc.root.user.name) == "John")
+        #expect(String(doc.root.user.email) == "john@example.com")
     }
 
-    @Test("Get accessor")
-    func getAccessor() throws {
+    @Test("Attributes accessor")
+    func attributesAccessor() throws {
         let doc = try XML.parse(#"<root id="123" class="test"><item>Hello</item></root>"#)
 
-        #expect(doc.root.get.name == "root")
-        #expect(doc.root.get.attribute("id") == "123")
-        #expect(doc.root.get.attributes["class"] == "test")
-        #expect(doc.root.item.get.text == "Hello")
-        #expect(doc.root.get.children.count == 1)
+        #expect(doc.root.element.name == "root")
+        #expect(doc.root.attributes["id"] == "123")
+        #expect(doc.root.attributes.all["class"] == "test")
+        #expect(String(doc.root.item) == "Hello")
+        #expect(doc.root.children().count == 1)
     }
 
-    @Test("Query accessor")
-    func queryAccessor() throws {
+    @Test("Children accessor")
+    func childrenAccessor() throws {
         let doc = try XML.parse("""
             <root>
                 <item>First</item>
@@ -40,10 +40,14 @@ struct XMLWrapperTests {
             </root>
             """)
 
-        #expect(doc.root.query.children("item").count == 3)
-        #expect(doc.root.query.child("item")?.get.text == "First")
-        #expect(doc.root.query.descendants("item").count == 4)
-        #expect(doc.root.query.descendant("nested")?.get.name == "nested")
+        #expect(doc.root.children.named["item"].count == 3)
+        if let first = doc.root.children.first["item"] {
+            #expect(String(first) == "First")
+        } else {
+            Issue.record("Expected to find first item")
+        }
+        #expect(doc.root.children.descendants["item"].count == 4)
+        #expect(doc.root.children.descendant["nested"]?.element.name == "nested")
     }
 
     @Test("Subscript access")
@@ -55,9 +59,9 @@ struct XMLWrapperTests {
             </root>
             """)
 
-        #expect(doc.root["item"].get.text == "First")
-        #expect(doc.root[0].get.text == "First")
-        #expect(doc.root[1].get.text == "Second")
+        #expect(String(doc.root["item"]) == "First")
+        #expect(String(doc.root[0]) == "First")
+        #expect(String(doc.root[1]) == "Second")
     }
 
     @Test("Safe chaining with null elements")
@@ -85,8 +89,8 @@ struct XMLWrapperTests {
     @Test("Element creation")
     func elementCreation() {
         let xml = XML.element("item", text: "Hello")
-        #expect(xml.get.name == "item")
-        #expect(xml.get.text == "Hello")
+        #expect(xml.element.name == "item")
+        #expect(String(xml) == "Hello")
     }
 
     @Test("Element with children")
@@ -96,15 +100,15 @@ struct XMLWrapperTests {
             XML.element("item", text: "Second")
         ])
 
-        #expect(xml.get.children.count == 2)
-        #expect(xml[0].get.text == "First")
-        #expect(xml[1].get.text == "Second")
+        #expect(xml.children().count == 2)
+        #expect(String(xml[0]) == "First")
+        #expect(String(xml[1]) == "Second")
     }
 
     @Test("AllText collects nested text")
     func allTextCollectsNested() throws {
         let doc = try XML.parse("<root>Hello <b>World</b>!</root>")
-        #expect(doc.root.get.allText == "Hello World!")
+        #expect(doc.root.text.all == "Hello World!")
     }
 
     @Test("Count property")
@@ -125,10 +129,10 @@ struct XMLWrapperTests {
             </root>
             """)
 
-        let item = doc.root.query.child("ex:item")
-        #expect(item?.get.prefix == "ex")
-        #expect(item?.get.name == "item")
-        #expect(item?.get.qualified == "ex:item")
+        let item = doc.root.children.first["ex:item"]
+        #expect(item?.element.prefix == "ex")
+        #expect(item?.element.name == "item")
+        #expect(item?.element.qualified == "ex:item")
     }
 }
 
@@ -138,7 +142,7 @@ struct SerializableTests {
     func stringSerialization() throws {
         let value = "Hello"
         let xml = value.xml
-        #expect(xml.get.text == "Hello")
+        #expect(String(xml) == "Hello")
 
         let restored = try String(xml: xml)
         #expect(restored == value)
@@ -148,7 +152,7 @@ struct SerializableTests {
     func intSerialization() throws {
         let value = 42
         let xml = value.xml
-        #expect(xml.get.text == "42")
+        #expect(String(xml) == "42")
 
         let restored = try Int(xml: xml)
         #expect(restored == value)
@@ -158,7 +162,7 @@ struct SerializableTests {
     func doubleSerialization() throws {
         let value = 3.14
         let xml = value.xml
-        #expect(xml.get.text == "3.14")
+        #expect(String(xml) == "3.14")
 
         let restored = try Double(xml: xml)
         #expect(restored == value)
@@ -169,8 +173,8 @@ struct SerializableTests {
         let trueXML = true.xml
         let falseXML = false.xml
 
-        #expect(trueXML.get.name == "true")
-        #expect(falseXML.get.name == "false")
+        #expect(trueXML.element.name == "true")
+        #expect(falseXML.element.name == "false")
 
         #expect(try Bool(xml: trueXML) == true)
         #expect(try Bool(xml: falseXML) == false)
@@ -180,7 +184,7 @@ struct SerializableTests {
     func arraySerialization() throws {
         let values = [1, 2, 3]
         let xml = values.xml
-        #expect(xml.get.children.count == 3)
+        #expect(xml.children().count == 3)
 
         let restored = try [Int](xml: xml)
         #expect(restored == values)
@@ -194,8 +198,8 @@ struct SerializableTests {
         let someXML = some.xml
         let noneXML = none.xml
 
-        #expect(someXML.get.text == "42")
-        #expect(noneXML.get.name == "null")
+        #expect(String(someXML) == "42")
+        #expect(noneXML.element.name == "null")
 
         let restoredSome = try Int?(xml: someXML)
         let restoredNone = try Int?(xml: noneXML)
@@ -224,22 +228,22 @@ struct LiteralTests {
     @Test("String literal")
     func stringLiteral() {
         let xml: XML = "<item>Hello</item>"
-        #expect(xml.get.name == "item")
-        #expect(xml.get.text == "Hello")
+        #expect(xml.element.name == "item")
+        #expect(String(xml) == "Hello")
     }
 
     @Test("String interpolation with escaping")
     func stringInterpolation() {
         let name = "John <Doe>"
         let xml: XML = "<name>\(name)</name>"
-        #expect(xml.get.text == "John <Doe>")
+        #expect(String(xml) == "John <Doe>")
     }
 
     @Test("Interpolation escapes special characters")
     func interpolationEscapes() {
         let value = "A & B < C > D"
         let xml: XML = "<data>\(value)</data>"
-        #expect(xml.get.text == "A & B < C > D")
+        #expect(String(xml) == "A & B < C > D")
     }
 }
 
@@ -248,12 +252,12 @@ struct DocumentTests {
     @Test("Document root access")
     func documentRootAccess() throws {
         let doc = try XML.parse("<root><child/></root>")
-        #expect(doc.root.get.name == "root")
+        #expect(doc.root.element.name == "root")
     }
 
     @Test("Document dynamic member lookup")
     func documentDynamicMemberLookup() throws {
         let doc = try XML.parse("<root><child>Hello</child></root>")
-        #expect(doc.root.child.get.text == "Hello")
+        #expect(String(doc.root.child) == "Hello")
     }
 }

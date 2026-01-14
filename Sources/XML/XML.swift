@@ -36,8 +36,8 @@
 ///
 /// // Children
 /// xml.items.children()               // [XML] - all children
-/// xml.items.children.named("item")   // [XML] - filtered
-/// xml.items.children.first("item")   // XML? - first match
+/// xml.items.children.named["item"]   // [XML] - filtered
+/// xml.items.children.first["item"]   // XML? - first match
 /// ```
 ///
 /// ## Serialization
