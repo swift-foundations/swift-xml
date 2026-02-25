@@ -25,7 +25,13 @@ let package = Package(
                 .product(name: "W3C XML", package: "swift-w3c-xml"),
                 .product(name: "Async", package: "swift-async")
             ]
-        )
+        ),
+        .testTarget(
+            name: "XML Tests",
+            dependencies: [
+                "XML",
+            ]
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
@@ -37,6 +43,7 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
         .enableExperimentalFeature("Lifetimes"),
         .enableExperimentalFeature("SuppressedAssociatedTypes"),
         .enableExperimentalFeature("SuppressedAssociatedTypesWithDefaults"),
