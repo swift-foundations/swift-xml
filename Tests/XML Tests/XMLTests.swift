@@ -3,8 +3,8 @@ import Testing
 
 @Suite("XML Wrapper Tests")
 struct XMLWrapperTests {
-    @Test("Dynamic member lookup")
-    func dynamicMemberLookup() throws {
+    @Test
+    func `Dynamic member lookup`() throws {
         let doc = try XML.parse("""
             <root>
                 <user>
@@ -18,8 +18,8 @@ struct XMLWrapperTests {
         #expect(String(doc.root.user.email) == "john@example.com")
     }
 
-    @Test("Attributes accessor")
-    func attributesAccessor() throws {
+    @Test
+    func `Attributes accessor`() throws {
         let doc = try XML.parse(#"<root id="123" class="test"><item>Hello</item></root>"#)
 
         #expect(doc.root.element.name == "root")
@@ -29,8 +29,8 @@ struct XMLWrapperTests {
         #expect(doc.root.children().count == 1)
     }
 
-    @Test("Children accessor")
-    func childrenAccessor() throws {
+    @Test
+    func `Children accessor`() throws {
         let doc = try XML.parse("""
             <root>
                 <item>First</item>
@@ -50,8 +50,8 @@ struct XMLWrapperTests {
         #expect(doc.root.children.descendant["nested"]?.element.name == "nested")
     }
 
-    @Test("Subscript access")
-    func subscriptAccess() throws {
+    @Test
+    func `Subscript access`() throws {
         let doc = try XML.parse("""
             <root>
                 <item>First</item>
@@ -64,8 +64,8 @@ struct XMLWrapperTests {
         #expect(String(doc.root[1]) == "Second")
     }
 
-    @Test("Safe chaining with null elements")
-    func safeChaining() throws {
+    @Test
+    func `Safe chaining with null elements`() throws {
         let doc = try XML.parse("<root/>")
 
         #expect(doc.root.nonexistent.isNull)
@@ -74,8 +74,8 @@ struct XMLWrapperTests {
         #expect(doc.root[99].isNull)
     }
 
-    @Test("Serialize accessor")
-    func serializeAccessor() throws {
+    @Test
+    func `Serialize accessor`() throws {
         let doc = try XML.parse("<root><item>Hello</item></root>")
 
         let string = doc.root.serialize()
@@ -86,15 +86,15 @@ struct XMLWrapperTests {
         #expect(!bytes.isEmpty)
     }
 
-    @Test("Element creation")
-    func elementCreation() {
+    @Test
+    func `Element creation`() {
         let xml = XML.element("item", text: "Hello")
         #expect(xml.element.name == "item")
         #expect(String(xml) == "Hello")
     }
 
-    @Test("Element with children")
-    func elementWithChildren() {
+    @Test
+    func `Element with children`() {
         let xml = XML.element("root", children: [
             XML.element("item", text: "First"),
             XML.element("item", text: "Second")
@@ -105,14 +105,14 @@ struct XMLWrapperTests {
         #expect(String(xml[1]) == "Second")
     }
 
-    @Test("AllText collects nested text")
-    func allTextCollectsNested() throws {
+    @Test
+    func `AllText collects nested text`() throws {
         let doc = try XML.parse("<root>Hello <b>World</b>!</root>")
         #expect(doc.root.text.all == "Hello World!")
     }
 
-    @Test("Count property")
-    func countProperty() throws {
+    @Test
+    func `Count property`() throws {
         let doc = try XML.parse("""
             <root>
                 <a/><b/><c/>
@@ -121,8 +121,8 @@ struct XMLWrapperTests {
         #expect(doc.root.count == 3)
     }
 
-    @Test("Qualified name access")
-    func qualifiedNameAccess() throws {
+    @Test
+    func `Qualified name access`() throws {
         let doc = try XML.parse("""
             <root xmlns:ex="http://example.com">
                 <ex:item>Hello</ex:item>
@@ -138,8 +138,8 @@ struct XMLWrapperTests {
 
 @Suite("XML.Serializable Tests")
 struct SerializableTests {
-    @Test("String serialization")
-    func stringSerialization() throws {
+    @Test
+    func `String serialization`() throws {
         let value = "Hello"
         let xml = value.xml
         #expect(String(xml) == "Hello")
@@ -148,8 +148,8 @@ struct SerializableTests {
         #expect(restored == value)
     }
 
-    @Test("Int serialization")
-    func intSerialization() throws {
+    @Test
+    func `Int serialization`() throws {
         let value = 42
         let xml = value.xml
         #expect(String(xml) == "42")
@@ -158,8 +158,8 @@ struct SerializableTests {
         #expect(restored == value)
     }
 
-    @Test("Double serialization")
-    func doubleSerialization() throws {
+    @Test
+    func `Double serialization`() throws {
         let value = 3.14
         let xml = value.xml
         #expect(String(xml) == "3.14")
@@ -168,8 +168,8 @@ struct SerializableTests {
         #expect(restored == value)
     }
 
-    @Test("Bool serialization")
-    func boolSerialization() throws {
+    @Test
+    func `Bool serialization`() throws {
         let trueXML = true.xml
         let falseXML = false.xml
 
@@ -180,8 +180,8 @@ struct SerializableTests {
         #expect(try Bool(xml: falseXML) == false)
     }
 
-    @Test("Array serialization")
-    func arraySerialization() throws {
+    @Test
+    func `Array serialization`() throws {
         let values = [1, 2, 3]
         let xml = values.xml
         #expect(xml.children().count == 3)
@@ -190,8 +190,8 @@ struct SerializableTests {
         #expect(restored == values)
     }
 
-    @Test("Optional serialization")
-    func optionalSerialization() throws {
+    @Test
+    func `Optional serialization`() throws {
         let some: Int? = 42
         let none: Int? = nil
 
@@ -208,15 +208,15 @@ struct SerializableTests {
         #expect(restoredNone == nil)
     }
 
-    @Test("xmlString convenience")
-    func xmlStringConvenience() {
+    @Test
+    func `xmlString convenience`() {
         let value = 42
         let string = value.xmlString()
         #expect(string.contains("42"))
     }
 
-    @Test("xmlBytes convenience")
-    func xmlBytesConvenience() {
+    @Test
+    func `xmlBytes convenience`() {
         let value = 42
         let bytes = value.xmlBytes()
         #expect(!bytes.isEmpty)
@@ -225,22 +225,22 @@ struct SerializableTests {
 
 @Suite("XML Literal Tests")
 struct LiteralTests {
-    @Test("String literal")
-    func stringLiteral() {
+    @Test
+    func `String literal`() {
         let xml: XML = "<item>Hello</item>"
         #expect(xml.element.name == "item")
         #expect(String(xml) == "Hello")
     }
 
-    @Test("String interpolation with escaping")
-    func stringInterpolation() {
+    @Test
+    func `String interpolation with escaping`() {
         let name = "John <Doe>"
         let xml: XML = "<name>\(name)</name>"
         #expect(String(xml) == "John <Doe>")
     }
 
-    @Test("Interpolation escapes special characters")
-    func interpolationEscapes() {
+    @Test
+    func `Interpolation escapes special characters`() {
         let value = "A & B < C > D"
         let xml: XML = "<data>\(value)</data>"
         #expect(String(xml) == "A & B < C > D")
@@ -249,14 +249,14 @@ struct LiteralTests {
 
 @Suite("XML.Document Tests")
 struct DocumentTests {
-    @Test("Document root access")
-    func documentRootAccess() throws {
+    @Test
+    func `Document root access`() throws {
         let doc = try XML.parse("<root><child/></root>")
         #expect(doc.root.element.name == "root")
     }
 
-    @Test("Document dynamic member lookup")
-    func documentDynamicMemberLookup() throws {
+    @Test
+    func `Document dynamic member lookup`() throws {
         let doc = try XML.parse("<root><child>Hello</child></root>")
         #expect(String(doc.root.child) == "Hello")
     }

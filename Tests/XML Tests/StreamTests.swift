@@ -9,8 +9,8 @@ struct StreamTests {
 
     // MARK: - ND XML Streaming
 
-    @Test("Parse ND XML stream")
-    func parseNDXML() async throws {
+    @Test
+    func `Parse ND XML stream`() async throws {
         let input = """
         <?xml version="1.0"?><item><id>1</id></item>
         <?xml version="1.0"?><item><id>2</id></item>
@@ -34,8 +34,8 @@ struct StreamTests {
         #expect(ids == ["1", "2", "3"])
     }
 
-    @Test("Skip empty lines in ND XML")
-    func skipEmptyLines() async throws {
+    @Test
+    func `Skip empty lines in ND XML`() async throws {
         let input = """
         <?xml version="1.0"?><item><id>1</id></item>
 
@@ -60,8 +60,8 @@ struct StreamTests {
         #expect(ids == ["1", "2"])
     }
 
-    @Test("Continue after malformed line")
-    func continueAfterError() async {
+    @Test
+    func `Continue after malformed line`() async {
         let input = """
         <?xml version="1.0"?><item><id>1</id></item>
         not valid xml
@@ -92,8 +92,8 @@ struct StreamTests {
         #expect(failures == 1)
     }
 
-    @Test("Handle CRLF line endings")
-    func handleCRLF() async throws {
+    @Test
+    func `Handle CRLF line endings`() async throws {
         let input = "<?xml version=\"1.0\"?><item><id>1</id></item>\r\n<?xml version=\"1.0\"?><item><id>2</id></item>\r\n"
 
         let bytes = AsyncStream<UInt8> { continuation in
@@ -113,8 +113,8 @@ struct StreamTests {
         #expect(ids == ["1", "2"])
     }
 
-    @Test("Parse without trailing newline")
-    func noTrailingNewline() async throws {
+    @Test
+    func `Parse without trailing newline`() async throws {
         let input = "<?xml version=\"1.0\"?><item><id>1</id></item>\n<?xml version=\"1.0\"?><item><id>2</id></item>"
 
         let bytes = AsyncStream<UInt8> { continuation in
@@ -136,8 +136,8 @@ struct StreamTests {
 
     // MARK: - Single Document Async Parse
 
-    @Test("Parse single document from async bytes")
-    func parseSingleAsync() async throws {
+    @Test
+    func `Parse single document from async bytes`() async throws {
         let input = """
         <?xml version="1.0" encoding="UTF-8"?>
         <person>
@@ -159,8 +159,8 @@ struct StreamTests {
         #expect(doc.root["age"].text() == "30")
     }
 
-    @Test("Parse via accessor")
-    func parseViaAccessor() async throws {
+    @Test
+    func `Parse via accessor`() async throws {
         let input = """
         <?xml version="1.0"?><greeting>Hello</greeting>
         """
@@ -177,8 +177,8 @@ struct StreamTests {
         #expect(doc.root.text() == "Hello")
     }
 
-    @Test("Stream via accessor")
-    func streamViaAccessor() async throws {
+    @Test
+    func `Stream via accessor`() async throws {
         let input = """
         <?xml version="1.0"?><item><id>1</id></item>
         <?xml version="1.0"?><item><id>2</id></item>
@@ -200,8 +200,8 @@ struct StreamTests {
         #expect(count == 2)
     }
 
-    @Test("Parse empty async stream")
-    func parseEmptyAsync() async {
+    @Test
+    func `Parse empty async stream`() async {
         let bytes = AsyncStream<UInt8> { continuation in
             continuation.finish()
         }
@@ -216,8 +216,8 @@ struct StreamTests {
 
     // MARK: - XML.Serializable Async
 
-    @Test("Deserialize from async bytes")
-    func deserializeAsync() async throws {
+    @Test
+    func `Deserialize from async bytes`() async throws {
         let input = """
         <?xml version="1.0"?><value>42</value>
         """
