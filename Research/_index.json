@@ -5,17 +5,5 @@
   "title": "Research Index — swift-xml",
   "blurb": "",
   "scope": "swift-xml (swift-foundations)",
-  "documents": [
-    {
-      "file": "audit.md",
-      "displayName": "audit.md",
-      "topic": "Modularization audit: MOD-010 stdlib extensions",
-      "date": "2026-03-20",
-      "status": "OPEN",
-      "statusDetail": null,
-      "statusRaw": "OPEN",
-      "tier": null,
-      "scope": null
-    }
-  ]
+  "documents": []
 }
