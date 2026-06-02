@@ -15,8 +15,8 @@ let package = Package(
         .library(name: "XML", targets: ["XML"])
     ],
     dependencies: [
-        .package(path: "../../swift-w3c/swift-w3c-xml"),
-        .package(path: "../swift-async")
+        .package(url: "https://github.com/swift-w3c/swift-w3c-xml.git", branch: "main"),
+        .package(url: "https://github.com/swift-foundations/swift-async.git", branch: "main")
     ],
     targets: [
         .target(
