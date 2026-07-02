@@ -15,6 +15,10 @@ let package = Package(
         .library(name: "XML", targets: ["XML"])
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-primitives/swift-array-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-input-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-buffer-linear-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-shared-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-w3c/swift-w3c-xml.git", branch: "main"),
         .package(url: "https://github.com/swift-foundations/swift-async.git", branch: "main")
     ],
@@ -22,6 +26,11 @@ let package = Package(
         .target(
             name: "XML",
             dependencies: [
+                .product(name: "Array Primitives", package: "swift-array-primitives"),
+                .product(name: "Input Slice Primitives", package: "swift-input-primitives"),
+                .product(name: "Buffer Linear Primitive", package: "swift-buffer-linear-primitives"),
+                .product(name: "Buffer Linear Primitives", package: "swift-buffer-linear-primitives"),
+                .product(name: "Shared Primitive", package: "swift-shared-primitives"),
                 .product(name: "W3C XML", package: "swift-w3c-xml"),
                 .product(name: "Async", package: "swift-async")
             ]

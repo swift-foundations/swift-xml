@@ -22,6 +22,11 @@
 /// 10,000 levels by default) without stack overflow.
 
 import W3C_XML
+public import Array_Primitives
+public import Input_Slice_Primitives
+public import Buffer_Linear_Primitive
+public import Buffer_Linear_Primitives
+public import Shared_Primitive
 
 // MARK: - Parse Accessor
 
@@ -67,7 +72,7 @@ extension XML {
         /// - Throws: `XML.Error` if parsing fails.
         @inlinable
         public func callAsFunction<Bytes>(_ bytes: Bytes) throws(XML.Error) -> XML.Document
-        where Bytes: Collection<UInt8>, Bytes: Sendable {
+        where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
             do {
                 let doc = try W3C_XML.parse(bytes, maxDepth: maxDepth)
                 return XML.Document(doc)
@@ -220,7 +225,7 @@ extension XML {
         /// - Throws: `XML.Error` if parsing fails.
         @inlinable
         public func parse<Bytes>(_ bytes: Bytes) throws(XML.Error) -> XML.Document
-        where Bytes: Collection<UInt8>, Bytes: Sendable {
+        where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
             do {
                 let doc = try W3C_XML.parse(bytes, maxDepth: maxDepth)
                 return XML.Document(doc)
@@ -297,7 +302,7 @@ extension XML {
         /// - Throws: `XML.LocatedError` if parsing fails.
         @inlinable
         public func parse<Bytes>(_ bytes: Bytes) throws(XML.LocatedError) -> XML.Document
-        where Bytes: Collection<UInt8>, Bytes: Sendable {
+        where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
             do {
                 let doc = try W3C_XML.parse(bytes, maxDepth: maxDepth)
                 return XML.Document(doc)

@@ -4,7 +4,7 @@
 /// Async XML streaming support
 
 import W3C_XML
-import Async
+public import Async
 
 // MARK: - Async Parse
 

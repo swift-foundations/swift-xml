@@ -25,7 +25,7 @@ struct StreamTests {
         }
 
         var ids: [String] = []
-        for await result in XML.ND.stream(bytes) {
+        for result in try await collect(XML.ND.stream(bytes)) {
             let doc = try result.get()
             let id = doc.root["id"].text()
             ids.append(id)
@@ -51,7 +51,7 @@ struct StreamTests {
         }
 
         var ids: [String] = []
-        for await result in XML.ND.stream(bytes) {
+        for result in try await collect(XML.ND.stream(bytes)) {
             let doc = try result.get()
             let id = doc.root["id"].text()
             ids.append(id)
@@ -61,7 +61,7 @@ struct StreamTests {
     }
 
     @Test
-    func `Continue after malformed line`() async {
+    func `Continue after malformed line`() async throws {
         let input = """
         <?xml version="1.0"?><item><id>1</id></item>
         not valid xml
@@ -78,7 +78,7 @@ struct StreamTests {
         var successes: [String] = []
         var failures = 0
 
-        for await result in XML.ND.stream(bytes) {
+        for result in try await collect(XML.ND.stream(bytes)) {
             switch result {
             case .success(let doc):
                 let id = doc.root["id"].text()
@@ -104,7 +104,7 @@ struct StreamTests {
         }
 
         var ids: [String] = []
-        for await result in XML.ND.stream(bytes) {
+        for result in try await collect(XML.ND.stream(bytes)) {
             let doc = try result.get()
             let id = doc.root["id"].text()
             ids.append(id)
@@ -125,7 +125,7 @@ struct StreamTests {
         }
 
         var ids: [String] = []
-        for await result in XML.ND.stream(bytes) {
+        for result in try await collect(XML.ND.stream(bytes)) {
             let doc = try result.get()
             let id = doc.root["id"].text()
             ids.append(id)
@@ -192,7 +192,7 @@ struct StreamTests {
         }
 
         var count = 0
-        for await result in XML.parse.stream(nd: bytes) {
+        for result in try await collect(XML.parse.stream(nd: bytes)) {
             _ = try result.get()
             count += 1
         }
@@ -235,4 +235,14 @@ struct StreamTests {
 
         #expect(value == 42)
     }
+}
+
+/// Iterates through `AsyncSequence` protocol dispatch: the concrete
+/// iterator member lives in swift-async's internal-only Async Stream Core
+/// module, so direct `for await` over the concrete stream type fails
+/// MemberImportVisibility.
+private func collect<S: AsyncSequence>(_ sequence: S) async throws -> [S.Element] {
+    var elements: [S.Element] = []
+    for try await element in sequence { elements.append(element) }
+    return elements
 }

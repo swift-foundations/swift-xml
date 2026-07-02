@@ -67,7 +67,7 @@ extension XML.Serializable {
     /// Creates a value from UTF-8 encoded XML bytes.
     @inlinable
     public init<Bytes>(xmlBytes: Bytes) throws(XML.Error)
-    where Bytes: Collection<UInt8>, Bytes: Sendable {
+    where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
         let doc = try XML.parse(xmlBytes)
         self = try Self.deserialize(doc.root)
     }
