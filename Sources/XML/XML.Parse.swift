@@ -21,12 +21,12 @@
 /// parsing. This enables parsing of deeply nested documents (up to
 /// 10,000 levels by default) without stack overflow.
 
-import W3C_XML
 public import Array_Primitives
-public import Input_Slice_Primitives
 public import Buffer_Linear_Primitive
 public import Buffer_Linear_Primitives
+public import Input_Slice_Primitives
 public import Shared_Primitive
+import W3C_XML
 
 // MARK: - Parse Accessor
 

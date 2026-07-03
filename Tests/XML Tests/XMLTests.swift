@@ -1,18 +1,21 @@
 import Testing
+
 @testable import XML
 
 @Suite("XML Wrapper Tests")
 struct XMLWrapperTests {
     @Test
     func `Dynamic member lookup`() throws {
-        let doc = try XML.parse("""
+        let doc = try XML.parse(
+            """
             <root>
                 <user>
                     <name>John</name>
                     <email>john@example.com</email>
                 </user>
             </root>
-            """)
+            """
+        )
 
         #expect(String(doc.root.user.name) == "John")
         #expect(String(doc.root.user.email) == "john@example.com")
@@ -31,14 +34,16 @@ struct XMLWrapperTests {
 
     @Test
     func `Children accessor`() throws {
-        let doc = try XML.parse("""
+        let doc = try XML.parse(
+            """
             <root>
                 <item>First</item>
                 <item>Second</item>
                 <item>Third</item>
                 <nested><item>Nested</item></nested>
             </root>
-            """)
+            """
+        )
 
         #expect(doc.root.children.named["item"].count == 3)
         if let first = doc.root.children.first["item"] {
@@ -52,12 +57,14 @@ struct XMLWrapperTests {
 
     @Test
     func `Subscript access`() throws {
-        let doc = try XML.parse("""
+        let doc = try XML.parse(
+            """
             <root>
                 <item>First</item>
                 <item>Second</item>
             </root>
-            """)
+            """
+        )
 
         #expect(String(doc.root["item"]) == "First")
         #expect(String(doc.root[0]) == "First")
@@ -95,10 +102,13 @@ struct XMLWrapperTests {
 
     @Test
     func `Element with children`() {
-        let xml = XML.element("root", children: [
-            XML.element("item", text: "First"),
-            XML.element("item", text: "Second")
-        ])
+        let xml = XML.element(
+            "root",
+            children: [
+                XML.element("item", text: "First"),
+                XML.element("item", text: "Second"),
+            ]
+        )
 
         #expect(xml.children().count == 2)
         #expect(String(xml[0]) == "First")
@@ -113,21 +123,25 @@ struct XMLWrapperTests {
 
     @Test
     func `Count property`() throws {
-        let doc = try XML.parse("""
+        let doc = try XML.parse(
+            """
             <root>
                 <a/><b/><c/>
             </root>
-            """)
+            """
+        )
         #expect(doc.root.count == 3)
     }
 
     @Test
     func `Qualified name access`() throws {
-        let doc = try XML.parse("""
+        let doc = try XML.parse(
+            """
             <root xmlns:ex="http://example.com">
                 <ex:item>Hello</ex:item>
             </root>
-            """)
+            """
+        )
 
         let item = doc.root.children.first["ex:item"]
         #expect(item?.element.prefix == "ex")

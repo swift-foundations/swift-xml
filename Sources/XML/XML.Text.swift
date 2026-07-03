@@ -53,10 +53,13 @@ extension XML.Text {
             switch content {
             case .text(let t):
                 result += t
+
             case .cdata(let c):
                 result += c
+
             case .element(let e):
                 result += collectAllText(e)
+
             default:
                 break
             }

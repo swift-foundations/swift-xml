@@ -1,4 +1,4 @@
-/// Extensions for converting XML elements to Double.
+// Extensions for converting XML elements to Double.
 
 // MARK: - Double from XML
 

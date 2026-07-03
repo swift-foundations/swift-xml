@@ -146,6 +146,7 @@ extension Bool: XML.Serializable {
         switch xml.element.name {
         case "true": return true
         case "false": return false
+
         default:
             // Also check text content
             if let value = Bool(xml) {
@@ -160,17 +161,18 @@ extension Bool: XML.Serializable {
 
 extension Optional: XML.Serializable where Wrapped: XML.Serializable {
     @inlinable
-    public static func serialize(_ value: Optional<Wrapped>) -> XML {
+    public static func serialize(_ value: Wrapped?) -> XML {
         switch value {
         case .some(let wrapped):
             return Wrapped.serialize(wrapped)
+
         case .none:
             return XML(W3C_XML.Element(name: "null"))
         }
     }
 
     @inlinable
-    public static func deserialize(_ xml: XML) throws(XML.Error) -> Optional<Wrapped> {
+    public static func deserialize(_ xml: XML) throws(XML.Error) -> Wrapped? {
         if xml.element.name == "null" || xml.isNull {
             return nil
         }
@@ -182,12 +184,12 @@ extension Optional: XML.Serializable where Wrapped: XML.Serializable {
 
 extension Array: XML.Serializable where Element: XML.Serializable {
     @inlinable
-    public static func serialize(_ value: Array<Element>) -> XML {
+    public static func serialize(_ value: [Element]) -> XML {
         XML.element("array", children: value.map { Element.serialize($0) })
     }
 
     @inlinable
-    public static func deserialize(_ xml: XML) throws(XML.Error) -> Array<Element> {
+    public static func deserialize(_ xml: XML) throws(XML.Error) -> [Element] {
         let allChildren = xml.children()
         var result: [Element] = []
         result.reserveCapacity(allChildren.count)

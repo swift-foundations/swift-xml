@@ -47,12 +47,12 @@
 /// let pretty = xml.serialize(pretty: true)
 /// ```
 
-import W3C_XML
 public import Array_Primitives
-public import Input_Slice_Primitives
 public import Buffer_Linear_Primitive
 public import Buffer_Linear_Primitives
+public import Input_Slice_Primitives
 public import Shared_Primitive
+import W3C_XML
 
 /// An XML element for ergonomic access.
 ///
@@ -83,19 +83,23 @@ extension XML {
     /// Creates an XML element with text content.
     @inlinable
     public static func element(_ name: String, text: String) -> XML {
-        XML(W3C_XML.Element(
-            name: name,
-            content: [.text(text)]
-        ))
+        XML(
+            W3C_XML.Element(
+                name: name,
+                content: [.text(text)]
+            )
+        )
     }
 
     /// Creates an XML element with children.
     @inlinable
     public static func element(_ name: String, children: [XML]) -> XML {
-        XML(W3C_XML.Element(
-            name: name,
-            content: children.map { .element($0.raw) }
-        ))
+        XML(
+            W3C_XML.Element(
+                name: name,
+                content: children.map { .element($0.raw) }
+            )
+        )
     }
 }
 
@@ -129,7 +133,7 @@ extension XML {
     /// Returns an empty XML element if not found (allows safe chaining).
     @inlinable
     public subscript(name: String) -> XML {
-        raw.child(name).map(XML.init) ?? XML(W3C_XML.Element(name: "_null"))
+        raw.child(name).map(Self.init) ?? XML(W3C_XML.Element(name: "_null"))
     }
 
     /// Accesses a child element by index.
@@ -184,12 +188,12 @@ extension XML {
     /// - Returns: The parsed document.
     /// - Throws: `XML.Error` if parsing fails.
     @inlinable
-    public static func parse(_ string: String) throws(XML.Error) -> XML.Document {
+    public static func parse(_ string: String) throws(Self.Error) -> XML.Document {
         do {
             let doc = try W3C_XML.parse(string)
-            return XML.Document(doc)
+            return Self.Document(doc)
         } catch {
-            throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
+            throw Self.Error.syntax(message: "\(error)", line: 0, column: 0)
         }
     }
 
@@ -199,13 +203,13 @@ extension XML {
     /// - Returns: The parsed document.
     /// - Throws: `XML.Error` if parsing fails.
     @inlinable
-    public static func parse<Bytes>(_ bytes: Bytes) throws(XML.Error) -> XML.Document
+    public static func parse<Bytes>(_ bytes: Bytes) throws(Self.Error) -> XML.Document
     where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
         do {
             let doc = try W3C_XML.parse(bytes)
-            return XML.Document(doc)
+            return Self.Document(doc)
         } catch {
-            throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
+            throw Self.Error.syntax(message: "\(error)", line: 0, column: 0)
         }
     }
 
@@ -215,12 +219,12 @@ extension XML {
     /// - Returns: The parsed element.
     /// - Throws: `XML.Error` if parsing fails.
     @inlinable
-    public static func fragment(_ string: String) throws(XML.Error) -> XML {
+    public static func fragment(_ string: String) throws(Self.Error) -> XML {
         do {
             let element = try W3C_XML.fragment(string)
             return XML(element)
         } catch {
-            throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
+            throw Self.Error.syntax(message: "\(error)", line: 0, column: 0)
         }
     }
 }

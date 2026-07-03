@@ -2,6 +2,7 @@
 /// swift-xml
 
 import Testing
+
 @testable import XML
 
 @Suite("Stream Tests")
@@ -12,10 +13,10 @@ struct StreamTests {
     @Test
     func `Parse ND XML stream`() async throws {
         let input = """
-        <?xml version="1.0"?><item><id>1</id></item>
-        <?xml version="1.0"?><item><id>2</id></item>
-        <?xml version="1.0"?><item><id>3</id></item>
-        """
+            <?xml version="1.0"?><item><id>1</id></item>
+            <?xml version="1.0"?><item><id>2</id></item>
+            <?xml version="1.0"?><item><id>3</id></item>
+            """
 
         let bytes = AsyncStream<UInt8> { continuation in
             for byte in input.utf8 {
@@ -37,11 +38,11 @@ struct StreamTests {
     @Test
     func `Skip empty lines in ND XML`() async throws {
         let input = """
-        <?xml version="1.0"?><item><id>1</id></item>
+            <?xml version="1.0"?><item><id>1</id></item>
 
-        <?xml version="1.0"?><item><id>2</id></item>
+            <?xml version="1.0"?><item><id>2</id></item>
 
-        """
+            """
 
         let bytes = AsyncStream<UInt8> { continuation in
             for byte in input.utf8 {
@@ -63,10 +64,10 @@ struct StreamTests {
     @Test
     func `Continue after malformed line`() async throws {
         let input = """
-        <?xml version="1.0"?><item><id>1</id></item>
-        not valid xml
-        <?xml version="1.0"?><item><id>3</id></item>
-        """
+            <?xml version="1.0"?><item><id>1</id></item>
+            not valid xml
+            <?xml version="1.0"?><item><id>3</id></item>
+            """
 
         let bytes = AsyncStream<UInt8> { continuation in
             for byte in input.utf8 {
@@ -83,6 +84,7 @@ struct StreamTests {
             case .success(let doc):
                 let id = doc.root["id"].text()
                 successes.append(id)
+
             case .failure:
                 failures += 1
             }
@@ -139,12 +141,12 @@ struct StreamTests {
     @Test
     func `Parse single document from async bytes`() async throws {
         let input = """
-        <?xml version="1.0" encoding="UTF-8"?>
-        <person>
-            <name>John</name>
-            <age>30</age>
-        </person>
-        """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <person>
+                <name>John</name>
+                <age>30</age>
+            </person>
+            """
 
         let bytes = AsyncStream<UInt8> { continuation in
             for byte in input.utf8 {
@@ -162,8 +164,8 @@ struct StreamTests {
     @Test
     func `Parse via accessor`() async throws {
         let input = """
-        <?xml version="1.0"?><greeting>Hello</greeting>
-        """
+            <?xml version="1.0"?><greeting>Hello</greeting>
+            """
 
         let bytes = AsyncStream<UInt8> { continuation in
             for byte in input.utf8 {
@@ -180,9 +182,9 @@ struct StreamTests {
     @Test
     func `Stream via accessor`() async throws {
         let input = """
-        <?xml version="1.0"?><item><id>1</id></item>
-        <?xml version="1.0"?><item><id>2</id></item>
-        """
+            <?xml version="1.0"?><item><id>1</id></item>
+            <?xml version="1.0"?><item><id>2</id></item>
+            """
 
         let bytes = AsyncStream<UInt8> { continuation in
             for byte in input.utf8 {
@@ -219,8 +221,8 @@ struct StreamTests {
     @Test
     func `Deserialize from async bytes`() async throws {
         let input = """
-        <?xml version="1.0"?><value>42</value>
-        """
+            <?xml version="1.0"?><value>42</value>
+            """
 
         let bytes = AsyncStream<UInt8> { continuation in
             for byte in input.utf8 {

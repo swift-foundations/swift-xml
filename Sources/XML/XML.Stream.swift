@@ -1,10 +1,10 @@
-/// XML.Stream.swift
-/// swift-xml
-///
-/// Async XML streaming support
+// XML.Stream.swift
+// swift-xml
+//
+// Async XML streaming support
 
-import W3C_XML
 public import Async
+import W3C_XML
 
 // MARK: - Async Parse
 
@@ -20,7 +20,7 @@ extension XML {
     @inlinable
     public static func parse<S: AsyncSequence & Sendable>(
         collecting bytes: S
-    ) async throws(XML.Error) -> XML.Document
+    ) async throws(Self.Error) -> XML.Document
     where S.Element == UInt8 {
         var buffer: [UInt8] = []
         do {
@@ -128,13 +128,13 @@ extension XML.ND {
 }
 
 extension XML.ND {
-    /// Internal state machine for ND XML parsing.
     // WHY: Category D — structural Sendable workaround.
     // WHY: AsyncIteratorProtocol generic parameter blocks Sendable inference.
     // WHY: No caller invariant to uphold — data is structurally safe.
     // WHEN TO REMOVE: When compiler gains structural Sendable inference through
     // WHEN TO REMOVE: AsyncIteratorProtocol generic parameters.
     // TRACKING: unsafe-audit-findings.md Category D; SP-4.
+    /// Internal state machine for ND XML parsing.
     @usableFromInline
     internal final class State<I: AsyncIteratorProtocol>: @unchecked Sendable
     where I.Element == UInt8 {
@@ -175,13 +175,13 @@ extension XML.ND {
                     return parseLine()
                 }
 
-                if byte == 0x0A { // LF - newline
-                    if buffer.isEmpty { continue } // Skip empty lines
+                if byte == 0x0A {  // LF - newline
+                    if buffer.isEmpty { continue }  // Skip empty lines
                     defer { buffer.removeAll(keepingCapacity: true) }
                     return parseLine()
                 }
 
-                if byte == 0x0D { continue } // Skip CR
+                if byte == 0x0D { continue }  // Skip CR
 
                 buffer.append(byte)
             }

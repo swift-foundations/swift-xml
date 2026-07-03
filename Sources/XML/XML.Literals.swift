@@ -14,7 +14,7 @@ extension XML: ExpressibleByStringLiteral {
     @inlinable
     public init(stringLiteral value: String) {
         do {
-            self = try XML.fragment(value)
+            self = try Self.fragment(value)
         } catch {
             preconditionFailure("Invalid XML literal: \(error)")
         }
@@ -64,7 +64,7 @@ extension XML: ExpressibleByStringInterpolation {
     @inlinable
     public init(stringInterpolation: StringInterpolation) {
         do {
-            self = try XML.fragment(stringInterpolation.result)
+            self = try Self.fragment(stringInterpolation.result)
         } catch {
             preconditionFailure("Invalid XML literal: \(error)")
         }

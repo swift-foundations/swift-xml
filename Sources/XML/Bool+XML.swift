@@ -1,4 +1,4 @@
-/// Extensions for converting XML elements to Bool.
+// Extensions for converting XML elements to Bool.
 
 // MARK: - Bool from XML
 
@@ -20,8 +20,10 @@ extension Bool {
         switch text {
         case "true", "yes", "1":
             self = true
+
         case "false", "no", "0":
             self = false
+
         default:
             return nil
         }

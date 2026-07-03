@@ -62,4 +62,3 @@ extension XML.Error: CustomStringConvertible {
         }
     }
 }
-

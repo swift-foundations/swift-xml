@@ -1,4 +1,4 @@
-/// Extensions for converting XML elements to Int.
+// Extensions for converting XML elements to Int.
 
 // MARK: - Int from XML
 
