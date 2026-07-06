@@ -25,7 +25,7 @@ public import Array_Primitives
 public import Buffer_Linear_Primitive
 public import Buffer_Linear_Primitives
 public import Input_Slice_Primitives
-public import Shared_Primitive
+public import Ownership_Shared_Primitive
 import W3C_XML
 
 // MARK: - Parse Accessor
