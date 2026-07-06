@@ -242,7 +242,10 @@ struct SerializableTests {
 
 @Suite(
     "XML Literal Tests",
-    .disabled(if: Toolchain.hasTaggedMetadataSIGSEGV, "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML string-literal / interpolation init calls Self.fragment → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+")
+    .disabled(
+        if: Toolchain.hasTaggedMetadataSIGSEGV,
+        "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML string-literal / interpolation init calls Self.fragment → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+"
+    )
 )
 struct LiteralTests {
     @Test

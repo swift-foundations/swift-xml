@@ -42,9 +42,9 @@ enum Toolchain {
     /// guard auto-recovers (runs the suites normally) on 6.4+.
     static var hasTaggedMetadataSIGSEGV: Bool {
         #if compiler(<6.4)
-        return true
+            return true
         #else
-        return false
+            return false
         #endif
     }
 }
