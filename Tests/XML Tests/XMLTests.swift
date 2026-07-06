@@ -2,7 +2,10 @@ import Testing
 
 @testable import XML
 
-@Suite("XML Wrapper Tests")
+@Suite(
+    "XML Wrapper Tests",
+    .disabled(if: Toolchain.hasTaggedMetadataSIGSEGV, "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML.parse → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+")
+)
 struct XMLWrapperTests {
     @Test
     func `Dynamic member lookup`() throws {
@@ -237,7 +240,10 @@ struct SerializableTests {
     }
 }
 
-@Suite("XML Literal Tests")
+@Suite(
+    "XML Literal Tests",
+    .disabled(if: Toolchain.hasTaggedMetadataSIGSEGV, "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML string-literal / interpolation init calls Self.fragment → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+")
+)
 struct LiteralTests {
     @Test
     func `String literal`() {
@@ -261,7 +267,10 @@ struct LiteralTests {
     }
 }
 
-@Suite("XML.Document Tests")
+@Suite(
+    "XML.Document Tests",
+    .disabled(if: Toolchain.hasTaggedMetadataSIGSEGV, "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML.parse → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+")
+)
 struct DocumentTests {
     @Test
     func `Document root access`() throws {

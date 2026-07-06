@@ -5,7 +5,10 @@ import Testing
 
 @testable import XML
 
-@Suite("Stream Tests")
+@Suite(
+    "Stream Tests",
+    .disabled(if: Toolchain.hasTaggedMetadataSIGSEGV, "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML.parse(collecting:) → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+")
+)
 struct StreamTests {
 
     // MARK: - ND XML Streaming
