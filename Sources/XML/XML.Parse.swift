@@ -49,37 +49,6 @@ extension XML {
         /// Default maximum nesting depth.
         @usableFromInline
         internal let maxDepth: Int = 10000
-
-        /// Parses an XML document from a string.
-        ///
-        /// - Parameter string: The XML string to parse.
-        /// - Returns: The parsed document.
-        /// - Throws: `XML.Error` if parsing fails.
-        @inlinable
-        public func callAsFunction(_ string: String) throws(XML.Error) -> XML.Document {
-            do {
-                let doc = try W3C_XML.parse(string, maxDepth: maxDepth)
-                return XML.Document(doc)
-            } catch {
-                throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
-            }
-        }
-
-        /// Parses an XML document from UTF-8 bytes.
-        ///
-        /// - Parameter bytes: The UTF-8 encoded XML bytes.
-        /// - Returns: The parsed document.
-        /// - Throws: `XML.Error` if parsing fails.
-        @inlinable
-        public func callAsFunction<Bytes>(_ bytes: Bytes) throws(XML.Error) -> XML.Document
-        where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
-            do {
-                let doc = try W3C_XML.parse(bytes, maxDepth: maxDepth)
-                return XML.Document(doc)
-            } catch {
-                throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
-            }
-        }
     }
 
     /// Accessor for parse operation variants.
@@ -103,6 +72,39 @@ extension XML {
     /// }
     /// ```
     public static var parse: Parse { Parse() }
+}
+
+extension XML.Parse {
+    /// Parses an XML document from a string.
+    ///
+    /// - Parameter string: The XML string to parse.
+    /// - Returns: The parsed document.
+    /// - Throws: `XML.Error` if parsing fails.
+    @inlinable
+    public func callAsFunction(_ string: String) throws(XML.Error) -> XML.Document {
+        do throws(W3C_XML.Parse.Error) {
+            let doc = try W3C_XML.parse(string, maxDepth: maxDepth)
+            return XML.Document(doc)
+        } catch {
+            throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
+        }
+    }
+
+    /// Parses an XML document from UTF-8 bytes.
+    ///
+    /// - Parameter bytes: The UTF-8 encoded XML bytes.
+    /// - Returns: The parsed document.
+    /// - Throws: `XML.Error` if parsing fails.
+    @inlinable
+    public func callAsFunction<Bytes>(_ bytes: Bytes) throws(XML.Error) -> XML.Document
+    where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
+        do throws(W3C_XML.Parse.Error) {
+            let doc = try W3C_XML.parse(bytes, maxDepth: maxDepth)
+            return XML.Document(doc)
+        } catch {
+            throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
+        }
+    }
 }
 
 // MARK: - Prepared Parser
@@ -202,51 +204,53 @@ extension XML {
         internal init(maxDepth: Int) {
             self.maxDepth = maxDepth
         }
+    }
+}
 
-        /// Parses an XML document from a string.
-        ///
-        /// - Parameter string: The XML string to parse.
-        /// - Returns: The parsed document.
-        /// - Throws: `XML.Error` if parsing fails.
-        @inlinable
-        public func parse(_ string: String) throws(XML.Error) -> XML.Document {
-            do {
-                let doc = try W3C_XML.parse(string, maxDepth: maxDepth)
-                return XML.Document(doc)
-            } catch {
-                throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
-            }
+extension XML.Prepared {
+    /// Parses an XML document from a string.
+    ///
+    /// - Parameter string: The XML string to parse.
+    /// - Returns: The parsed document.
+    /// - Throws: `XML.Error` if parsing fails.
+    @inlinable
+    public func parse(_ string: String) throws(XML.Error) -> XML.Document {
+        do throws(W3C_XML.Parse.Error) {
+            let doc = try W3C_XML.parse(string, maxDepth: maxDepth)
+            return XML.Document(doc)
+        } catch {
+            throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
         }
+    }
 
-        /// Parses an XML document from UTF-8 bytes.
-        ///
-        /// - Parameter bytes: The UTF-8 encoded XML bytes.
-        /// - Returns: The parsed document.
-        /// - Throws: `XML.Error` if parsing fails.
-        @inlinable
-        public func parse<Bytes>(_ bytes: Bytes) throws(XML.Error) -> XML.Document
-        where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
-            do {
-                let doc = try W3C_XML.parse(bytes, maxDepth: maxDepth)
-                return XML.Document(doc)
-            } catch {
-                throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
-            }
+    /// Parses an XML document from UTF-8 bytes.
+    ///
+    /// - Parameter bytes: The UTF-8 encoded XML bytes.
+    /// - Returns: The parsed document.
+    /// - Throws: `XML.Error` if parsing fails.
+    @inlinable
+    public func parse<Bytes>(_ bytes: Bytes) throws(XML.Error) -> XML.Document
+    where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
+        do throws(W3C_XML.Parse.Error) {
+            let doc = try W3C_XML.parse(bytes, maxDepth: maxDepth)
+            return XML.Document(doc)
+        } catch {
+            throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
         }
+    }
 
-        /// Parses an XML fragment (single element).
-        ///
-        /// - Parameter string: The XML fragment string.
-        /// - Returns: The parsed element.
-        /// - Throws: `XML.Error` if parsing fails.
-        @inlinable
-        public func fragment(_ string: String) throws(XML.Error) -> XML {
-            do {
-                let element = try W3C_XML.fragment(string)
-                return XML(element)
-            } catch {
-                throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
-            }
+    /// Parses an XML fragment (single element).
+    ///
+    /// - Parameter string: The XML fragment string.
+    /// - Returns: The parsed element.
+    /// - Throws: `XML.Error` if parsing fails.
+    @inlinable
+    public func fragment(_ string: String) throws(XML.Error) -> XML {
+        do {
+            let element = try W3C_XML.fragment(string)
+            return XML(element)
+        } catch {
+            throw XML.Error.syntax(message: "\(error)", line: 0, column: 0)
         }
     }
 }
@@ -276,42 +280,44 @@ extension XML {
         internal init(maxDepth: Int) {
             self.maxDepth = maxDepth
         }
+    }
+}
 
-        /// Parses an XML document from a string with located errors.
-        ///
-        /// - Parameter string: The XML string to parse.
-        /// - Returns: The parsed document.
-        /// - Throws: `XML.LocatedError` if parsing fails.
-        @inlinable
-        public func parse(_ string: String) throws(XML.LocatedError) -> XML.Document {
-            do {
-                let doc = try W3C_XML.parse(string, maxDepth: maxDepth)
-                return XML.Document(doc)
-            } catch let error {
-                throw XML.LocatedError(
-                    XML.Error.syntax(message: "\(error)", line: 0, column: 0),
-                    at: error.offset
-                )
-            }
+extension XML.Located {
+    /// Parses an XML document from a string with located errors.
+    ///
+    /// - Parameter string: The XML string to parse.
+    /// - Returns: The parsed document.
+    /// - Throws: `XML.LocatedError` if parsing fails.
+    @inlinable
+    public func parse(_ string: String) throws(XML.LocatedError) -> XML.Document {
+        do throws(W3C_XML.Parse.Error) {
+            let doc = try W3C_XML.parse(string, maxDepth: maxDepth)
+            return XML.Document(doc)
+        } catch let error {
+            throw XML.LocatedError(
+                XML.Error.syntax(message: "\(error)", line: 0, column: 0),
+                at: error.offset
+            )
         }
+    }
 
-        /// Parses an XML document from UTF-8 bytes with located errors.
-        ///
-        /// - Parameter bytes: The UTF-8 encoded XML bytes.
-        /// - Returns: The parsed document.
-        /// - Throws: `XML.LocatedError` if parsing fails.
-        @inlinable
-        public func parse<Bytes>(_ bytes: Bytes) throws(XML.LocatedError) -> XML.Document
-        where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
-            do {
-                let doc = try W3C_XML.parse(bytes, maxDepth: maxDepth)
-                return XML.Document(doc)
-            } catch let error {
-                throw XML.LocatedError(
-                    XML.Error.syntax(message: "\(error)", line: 0, column: 0),
-                    at: error.offset
-                )
-            }
+    /// Parses an XML document from UTF-8 bytes with located errors.
+    ///
+    /// - Parameter bytes: The UTF-8 encoded XML bytes.
+    /// - Returns: The parsed document.
+    /// - Throws: `XML.LocatedError` if parsing fails.
+    @inlinable
+    public func parse<Bytes>(_ bytes: Bytes) throws(XML.LocatedError) -> XML.Document
+    where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
+        do throws(W3C_XML.Parse.Error) {
+            let doc = try W3C_XML.parse(bytes, maxDepth: maxDepth)
+            return XML.Document(doc)
+        } catch let error {
+            throw XML.LocatedError(
+                XML.Error.syntax(message: "\(error)", line: 0, column: 0),
+                at: error.offset
+            )
         }
     }
 }

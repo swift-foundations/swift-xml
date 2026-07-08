@@ -189,7 +189,7 @@ extension XML.ND {
 
         @usableFromInline
         func parseLine() -> Result<XML.Document, XML.Error> {
-            do {
+            do throws(XML.Error) {
                 let doc = try XML.parse(buffer)
                 return .success(doc)
             } catch {

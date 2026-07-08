@@ -45,15 +45,6 @@ extension XML.Children {
         init(_ xml: XML) {
             self.xml = xml
         }
-
-        /// Child elements with the specified name.
-        ///
-        /// - Parameter name: The element name to filter by.
-        /// - Returns: Array of matching child elements.
-        @inlinable
-        public subscript(_ name: String) -> [XML] {
-            xml.raw.children(name).map(XML.init)
-        }
     }
 
     /// Access children filtered by name.
@@ -64,6 +55,17 @@ extension XML.Children {
     @inlinable
     public var named: Named {
         Named(xml)
+    }
+}
+
+extension XML.Children.Named {
+    /// Child elements with the specified name.
+    ///
+    /// - Parameter name: The element name to filter by.
+    /// - Returns: Array of matching child elements.
+    @inlinable
+    public subscript(_ name: String) -> [XML] {
+        xml.raw.children(name).map(XML.init)
     }
 }
 
@@ -79,15 +81,6 @@ extension XML.Children {
         init(_ xml: XML) {
             self.xml = xml
         }
-
-        /// First child element with the specified name.
-        ///
-        /// - Parameter name: The element name to find.
-        /// - Returns: The first matching element, or `nil` if not found.
-        @inlinable
-        public subscript(_ name: String) -> XML? {
-            xml.raw.child(name).map(XML.init)
-        }
     }
 
     /// Access first child by name.
@@ -98,6 +91,17 @@ extension XML.Children {
     @inlinable
     public var first: First {
         First(xml)
+    }
+}
+
+extension XML.Children.First {
+    /// First child element with the specified name.
+    ///
+    /// - Parameter name: The element name to find.
+    /// - Returns: The first matching element, or `nil` if not found.
+    @inlinable
+    public subscript(_ name: String) -> XML? {
+        xml.raw.child(name).map(XML.init)
     }
 }
 
@@ -112,15 +116,6 @@ extension XML.Children {
         @usableFromInline
         init(_ xml: XML) {
             self.xml = xml
-        }
-
-        /// Descendant elements with the specified name (recursive).
-        ///
-        /// - Parameter name: The element name to filter by.
-        /// - Returns: Array of matching descendant elements.
-        @inlinable
-        public subscript(_ name: String) -> [XML] {
-            xml.raw.descendants(name).map(XML.init)
         }
     }
 
@@ -143,15 +138,6 @@ extension XML.Children {
         init(_ xml: XML) {
             self.xml = xml
         }
-
-        /// First descendant element with the specified name (recursive).
-        ///
-        /// - Parameter name: The element name to find.
-        /// - Returns: The first matching descendant, or `nil` if not found.
-        @inlinable
-        public subscript(_ name: String) -> XML? {
-            xml.raw.descendant(name).map(XML.init)
-        }
     }
 
     /// Access first descendant by name.
@@ -162,6 +148,28 @@ extension XML.Children {
     @inlinable
     public var descendant: Descendant {
         Descendant(xml)
+    }
+}
+
+extension XML.Children.Descendants {
+    /// Descendant elements with the specified name (recursive).
+    ///
+    /// - Parameter name: The element name to filter by.
+    /// - Returns: Array of matching descendant elements.
+    @inlinable
+    public subscript(_ name: String) -> [XML] {
+        xml.raw.descendants(name).map(XML.init)
+    }
+}
+
+extension XML.Children.Descendant {
+    /// First descendant element with the specified name (recursive).
+    ///
+    /// - Parameter name: The element name to find.
+    /// - Returns: The first matching descendant, or `nil` if not found.
+    @inlinable
+    public subscript(_ name: String) -> XML? {
+        xml.raw.descendant(name).map(XML.init)
     }
 }
 

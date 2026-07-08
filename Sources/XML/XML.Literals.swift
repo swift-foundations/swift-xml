@@ -13,7 +13,7 @@ extension XML: ExpressibleByStringLiteral {
     /// - Note: This will trap if the string is not valid XML.
     @inlinable
     public init(stringLiteral value: String) {
-        do {
+        do throws(XML.Error) {
             self = try Self.fragment(value)
         } catch {
             preconditionFailure("Invalid XML literal: \(error)")
@@ -63,7 +63,7 @@ extension XML: ExpressibleByStringInterpolation {
 
     @inlinable
     public init(stringInterpolation: StringInterpolation) {
-        do {
+        do throws(XML.Error) {
             self = try Self.fragment(stringInterpolation.result)
         } catch {
             preconditionFailure("Invalid XML literal: \(error)")

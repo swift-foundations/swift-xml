@@ -189,7 +189,7 @@ extension XML {
     /// - Throws: `XML.Error` if parsing fails.
     @inlinable
     public static func parse(_ string: String) throws(Self.Error) -> XML.Document {
-        do {
+        do throws(W3C_XML.Parse.Error) {
             let doc = try W3C_XML.parse(string)
             return Self.Document(doc)
         } catch {
@@ -205,7 +205,7 @@ extension XML {
     @inlinable
     public static func parse<Bytes>(_ bytes: Bytes) throws(Self.Error) -> XML.Document
     where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
-        do {
+        do throws(W3C_XML.Parse.Error) {
             let doc = try W3C_XML.parse(bytes)
             return Self.Document(doc)
         } catch {
@@ -241,31 +241,33 @@ extension XML {
         init(xml: XML) {
             self.xml = xml
         }
-
-        /// Serializes the element to a string.
-        ///
-        /// - Parameter pretty: Whether to format with indentation.
-        /// - Returns: The XML string.
-        @inlinable
-        public func callAsFunction(pretty: Bool = false) -> String {
-            let bytes = xml.raw.encode(options: W3C_XML.Options(prettyPrint: pretty))
-            return String(decoding: bytes, as: UTF8.self)
-        }
-
-        /// Serializes the element to UTF-8 bytes.
-        ///
-        /// - Parameter pretty: Whether to format with indentation.
-        /// - Returns: The UTF-8 encoded XML bytes.
-        @inlinable
-        public func bytes(pretty: Bool = false) -> [UInt8] {
-            xml.raw.encode(options: W3C_XML.Options(prettyPrint: pretty))
-        }
     }
 
     /// Serialize through the `serialize` accessor.
     @inlinable
     public var serialize: Serialize {
         Serialize(xml: self)
+    }
+}
+
+extension XML.Serialize {
+    /// Serializes the element to a string.
+    ///
+    /// - Parameter pretty: Whether to format with indentation.
+    /// - Returns: The XML string.
+    @inlinable
+    public func callAsFunction(pretty: Bool = false) -> String {
+        let bytes = xml.raw.encode(options: W3C_XML.Options(prettyPrint: pretty))
+        return String(decoding: bytes, as: UTF8.self)
+    }
+
+    /// Serializes the element to UTF-8 bytes.
+    ///
+    /// - Parameter pretty: Whether to format with indentation.
+    /// - Returns: The UTF-8 encoded XML bytes.
+    @inlinable
+    public func bytes(pretty: Bool = false) -> [UInt8] {
+        xml.raw.encode(options: W3C_XML.Options(prettyPrint: pretty))
     }
 }
 
