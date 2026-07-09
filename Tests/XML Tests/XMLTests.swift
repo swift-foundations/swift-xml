@@ -2,11 +2,12 @@ import Testing
 
 @testable import XML
 
+extension XML {
 @Suite(
     "XML Wrapper Tests",
     .disabled(if: Toolchain.hasTaggedMetadataSIGSEGV, "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML.parse → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+")
 )
-struct XMLWrapperTests {
+struct Test {
     @Test
     func `Dynamic member lookup`() throws {
         let doc = try XML.parse(
@@ -152,9 +153,10 @@ struct XMLWrapperTests {
         #expect(item?.element.qualified == "ex:item")
     }
 }
+}
 
-@Suite("XML.Serializable Tests")
-struct SerializableTests {
+@Suite
+struct `XML.Serializable Tests` {
     @Test
     func `String serialization`() throws {
         let value = "Hello"
@@ -240,6 +242,7 @@ struct SerializableTests {
     }
 }
 
+extension XML.Test {
 @Suite(
     "XML Literal Tests",
     .disabled(
@@ -247,7 +250,7 @@ struct SerializableTests {
         "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML string-literal / interpolation init calls Self.fragment → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+"
     )
 )
-struct LiteralTests {
+struct Literal {
     @Test
     func `String literal`() {
         let xml: XML = "<item>Hello</item>"
@@ -269,12 +272,14 @@ struct LiteralTests {
         #expect(String(xml) == "A & B < C > D")
     }
 }
+}
 
+extension XML.Document {
 @Suite(
     "XML.Document Tests",
     .disabled(if: Toolchain.hasTaggedMetadataSIGSEGV, "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML.parse → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+")
 )
-struct DocumentTests {
+struct Test {
     @Test
     func `Document root access`() throws {
         let doc = try XML.parse("<root><child/></root>")
@@ -286,4 +291,5 @@ struct DocumentTests {
         let doc = try XML.parse("<root><child>Hello</child></root>")
         #expect(String(doc.root.child) == "Hello")
     }
+}
 }
