@@ -214,7 +214,7 @@ struct StreamTests {
             continuation.finish()
         }
 
-        do {
+        do throws(XML.Error) {
             _ = try await XML.parse(collecting: bytes)
             Issue.record("Expected error for empty input")
         } catch {
