@@ -101,6 +101,24 @@ extension XML {
             )
         )
     }
+
+    /// Creates an XML element with ordered attributes and child elements.
+    @inlinable
+    public static func element(
+        _ name: Swift.String,
+        attributes: [Attribute],
+        children: [XML] = []
+    ) -> XML {
+        XML(
+            W3C_XML.Element(
+                name: name,
+                attributes: attributes.map {
+                    W3C_XML.Attribute(name: $0.name, value: $0.value)
+                },
+                content: children.map { .element($0.raw) }
+            )
+        )
+    }
 }
 
 // MARK: - Type Checking
