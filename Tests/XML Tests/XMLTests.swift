@@ -160,6 +160,10 @@ extension XML {
 
 @Suite
 struct `XML.Serializable Tests` {
+    @Suite struct Unit {}
+    @Suite struct `Edge Case` {}
+    @Suite struct Integration {}
+
     @Test
     func `String serialization`() throws {
         let value = "Hello"

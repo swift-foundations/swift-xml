@@ -42,12 +42,12 @@ extension XML.Text {
     /// Recursively collects text from this element and all descendants.
     @inlinable
     public var all: String {
-        collectAllText(xml.raw)
+        collect(xml.raw)
     }
 
     /// Collects all text from an element and its descendants.
     @usableFromInline
-    internal func collectAllText(_ element: W3C_XML.Element) -> String {
+    internal func collect(_ element: W3C_XML.Element) -> String {
         var result = ""
         for content in element.content {
             switch content {
@@ -58,7 +58,7 @@ extension XML.Text {
                 result += c
 
             case .element(let e):
-                result += collectAllText(e)
+                result += collect(e)
 
             default:
                 break

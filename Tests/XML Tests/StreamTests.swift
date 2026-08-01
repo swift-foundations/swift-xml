@@ -6,13 +6,15 @@ import Testing
 @testable import XML
 
 @Suite(
-    "Stream Tests",
     .disabled(
         if: Toolchain.hasTaggedMetadataSIGSEGV,
         "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML.parse(collecting:) → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+"
     )
 )
-struct StreamTests {
+struct `Stream Tests` {
+    @Suite struct Unit {}
+    @Suite struct `Edge Case` {}
+    @Suite struct Integration {}
 
     // MARK: - ND XML Streaming
 
@@ -249,7 +251,7 @@ struct StreamTests {
 /// iterator member lives in swift-async's internal-only Async Stream Core
 /// module, so direct `for await` over the concrete stream type fails
 /// MemberImportVisibility.
-private func collect<S: AsyncSequence>(_ sequence: S) async throws -> [S.Element] {
+private func collect<S: AsyncSequence>(_ sequence: S) async throws(S.Failure) -> [S.Element] {
     var elements: [S.Element] = []
     for try await element in sequence { elements.append(element) }
     return elements

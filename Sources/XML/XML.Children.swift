@@ -36,17 +36,6 @@ extension XML.Children {
 // MARK: - Named Children
 
 extension XML.Children {
-    /// Nested accessor for filtering children by name.
-    public struct Named: Sendable {
-        @usableFromInline
-        let xml: XML
-
-        @usableFromInline
-        init(_ xml: XML) {
-            self.xml = xml
-        }
-    }
-
     /// Access children filtered by name.
     ///
     /// ```swift
@@ -58,31 +47,9 @@ extension XML.Children {
     }
 }
 
-extension XML.Children.Named {
-    /// Child elements with the specified name.
-    ///
-    /// - Parameter name: The element name to filter by.
-    /// - Returns: Array of matching child elements.
-    @inlinable
-    public subscript(_ name: String) -> [XML] {
-        xml.raw.children(name).map(XML.init)
-    }
-}
-
 // MARK: - First Child
 
 extension XML.Children {
-    /// Nested accessor for first child by name.
-    public struct First: Sendable {
-        @usableFromInline
-        let xml: XML
-
-        @usableFromInline
-        init(_ xml: XML) {
-            self.xml = xml
-        }
-    }
-
     /// Access first child by name.
     ///
     /// ```swift
@@ -94,31 +61,9 @@ extension XML.Children {
     }
 }
 
-extension XML.Children.First {
-    /// First child element with the specified name.
-    ///
-    /// - Parameter name: The element name to find.
-    /// - Returns: The first matching element, or `nil` if not found.
-    @inlinable
-    public subscript(_ name: String) -> XML? {
-        xml.raw.child(name).map(XML.init)
-    }
-}
-
 // MARK: - Descendants
 
 extension XML.Children {
-    /// Nested accessor for descendants by name.
-    public struct Descendants: Sendable {
-        @usableFromInline
-        let xml: XML
-
-        @usableFromInline
-        init(_ xml: XML) {
-            self.xml = xml
-        }
-    }
-
     /// Access descendants filtered by name.
     ///
     /// ```swift
@@ -129,17 +74,6 @@ extension XML.Children {
         Descendants(xml)
     }
 
-    /// Nested accessor for first descendant by name.
-    public struct Descendant: Sendable {
-        @usableFromInline
-        let xml: XML
-
-        @usableFromInline
-        init(_ xml: XML) {
-            self.xml = xml
-        }
-    }
-
     /// Access first descendant by name.
     ///
     /// ```swift
@@ -148,28 +82,6 @@ extension XML.Children {
     @inlinable
     public var descendant: Descendant {
         Descendant(xml)
-    }
-}
-
-extension XML.Children.Descendants {
-    /// Descendant elements with the specified name (recursive).
-    ///
-    /// - Parameter name: The element name to filter by.
-    /// - Returns: Array of matching descendant elements.
-    @inlinable
-    public subscript(_ name: String) -> [XML] {
-        xml.raw.descendants(name).map(XML.init)
-    }
-}
-
-extension XML.Children.Descendant {
-    /// First descendant element with the specified name (recursive).
-    ///
-    /// - Parameter name: The element name to find.
-    /// - Returns: The first matching descendant, or `nil` if not found.
-    @inlinable
-    public subscript(_ name: String) -> XML? {
-        xml.raw.descendant(name).map(XML.init)
     }
 }
 
