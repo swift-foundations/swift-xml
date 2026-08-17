@@ -8,7 +8,7 @@ func `element construction preserves and escapes ordered attributes`() {
         "FileRef",
         attributes: [
             .init(name: "location", value: "group:a&b"),
-            .init(name: "kind", value: "package")
+            .init(name: "kind", value: "package"),
         ]
     )
 

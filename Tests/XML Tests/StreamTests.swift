@@ -104,7 +104,8 @@ struct `Stream Tests` {
 
     @Test
     func `Handle CRLF line endings`() async throws {
-        let input = "<?xml version=\"1.0\"?><item><id>1</id></item>\r\n<?xml version=\"1.0\"?><item><id>2</id></item>\r\n"
+        let input =
+            "<?xml version=\"1.0\"?><item><id>1</id></item>\r\n<?xml version=\"1.0\"?><item><id>2</id></item>\r\n"
 
         let bytes = AsyncStream<UInt8> { continuation in
             for byte in input.utf8 {
@@ -125,7 +126,8 @@ struct `Stream Tests` {
 
     @Test
     func `Parse without trailing newline`() async throws {
-        let input = "<?xml version=\"1.0\"?><item><id>1</id></item>\n<?xml version=\"1.0\"?><item><id>2</id></item>"
+        let input =
+            "<?xml version=\"1.0\"?><item><id>1</id></item>\n<?xml version=\"1.0\"?><item><id>2</id></item>"
 
         let bytes = AsyncStream<UInt8> { continuation in
             for byte in input.utf8 {
