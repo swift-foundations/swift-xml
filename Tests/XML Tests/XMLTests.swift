@@ -4,11 +4,7 @@ import Testing
 
 extension XML {
     @Suite(
-        "XML Wrapper Tests",
-        .disabled(
-            if: Toolchain.hasTaggedMetadataSIGSEGV,
-            "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML.parse → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+"
-        )
+        "XML Wrapper Tests"
     )
     struct Test {
         @Test
@@ -251,11 +247,7 @@ struct `XML.Serializable Tests` {
 
 extension XML.Test {
     @Suite(
-        "XML Literal Tests",
-        .disabled(
-            if: Toolchain.hasTaggedMetadataSIGSEGV,
-            "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML string-literal / interpolation init calls Self.fragment → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+"
-        )
+        "XML Literal Tests"
     )
     struct Literal {
         @Test
@@ -283,11 +275,7 @@ extension XML.Test {
 
 extension XML.Document {
     @Suite(
-        "XML.Document Tests",
-        .disabled(
-            if: Toolchain.hasTaggedMetadataSIGSEGV,
-            "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML.parse → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+"
-        )
+        "XML.Document Tests"
     )
     struct Test {
         @Test

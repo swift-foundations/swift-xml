@@ -5,12 +5,7 @@ import Testing
 
 @testable import XML
 
-@Suite(
-    .disabled(
-        if: Toolchain.hasTaggedMetadataSIGSEGV,
-        "§A9 Tagged-metadata SIGSEGV on Swift 6.3.x (XML.parse(collecting:) → W3C_XML.parse → Parser.Machine.Parser over Byte.Input forces Tagged VWT); fixed on 6.4+"
-    )
-)
+@Suite
 struct `Stream Tests` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
@@ -34,7 +29,7 @@ struct `Stream Tests` {
         }
 
         var ids: [String] = []
-        for result in try await collect(XML.ND.stream(bytes)) {
+        for result in await collect(XML.ND.stream(bytes)) {
             let doc = try result.get()
             let id = doc.root["id"].text()
             ids.append(id)
@@ -60,7 +55,7 @@ struct `Stream Tests` {
         }
 
         var ids: [String] = []
-        for result in try await collect(XML.ND.stream(bytes)) {
+        for result in await collect(XML.ND.stream(bytes)) {
             let doc = try result.get()
             let id = doc.root["id"].text()
             ids.append(id)
@@ -87,7 +82,7 @@ struct `Stream Tests` {
         var successes: [String] = []
         var failures = 0
 
-        for result in try await collect(XML.ND.stream(bytes)) {
+        for result in await collect(XML.ND.stream(bytes)) {
             switch result {
             case .success(let doc):
                 let id = doc.root["id"].text()
@@ -115,7 +110,7 @@ struct `Stream Tests` {
         }
 
         var ids: [String] = []
-        for result in try await collect(XML.ND.stream(bytes)) {
+        for result in await collect(XML.ND.stream(bytes)) {
             let doc = try result.get()
             let id = doc.root["id"].text()
             ids.append(id)
@@ -137,7 +132,7 @@ struct `Stream Tests` {
         }
 
         var ids: [String] = []
-        for result in try await collect(XML.ND.stream(bytes)) {
+        for result in await collect(XML.ND.stream(bytes)) {
             let doc = try result.get()
             let id = doc.root["id"].text()
             ids.append(id)
@@ -204,7 +199,7 @@ struct `Stream Tests` {
         }
 
         var count = 0
-        for result in try await collect(XML.parse.stream(nd: bytes)) {
+        for result in await collect(XML.parse.stream(nd: bytes)) {
             _ = try result.get()
             count += 1
         }

@@ -47,11 +47,11 @@
 /// let pretty = xml.serialize(pretty: true)
 /// ```
 
-public import Array_Primitives
-public import Buffer_Linear_Primitive
-public import Buffer_Linear_Primitives
-public import Input_Slice_Primitives
-public import Ownership_Shared_Primitive
+internal import Array_Primitives
+internal import Buffer_Linear_Primitive
+internal import Buffer_Linear_Primitives
+internal import Input_Slice_Primitives
+internal import Ownership_Shared_Primitive
 import W3C_XML
 
 /// An XML element for ergonomic access.
