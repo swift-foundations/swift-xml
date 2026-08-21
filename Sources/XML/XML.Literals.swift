@@ -1,16 +1,7 @@
-/// XML.Literals.swift
-/// swift-xml
-///
-/// Literal expressibility for XML
-
 import W3C_XML
 
-// MARK: - String Literal
-
 extension XML: ExpressibleByStringLiteral {
-    /// Creates an XML element by parsing a string literal.
-    ///
-    /// - Note: This will trap if the string is not valid XML.
+
     @inlinable
     public init(stringLiteral value: String) {
         do throws(Self.Error) {
@@ -20,8 +11,6 @@ extension XML: ExpressibleByStringLiteral {
         }
     }
 }
-
-// MARK: - String Interpolation
 
 extension XML: ExpressibleByStringInterpolation {
     public struct StringInterpolation: StringInterpolationProtocol {
@@ -52,13 +41,13 @@ extension XML.StringInterpolation {
 
     @inlinable
     public mutating func appendInterpolation(_ value: String) {
-        // Escape special characters
+
         result += W3C_XML.Entity.escapeText(value)
     }
 
     @inlinable
     public mutating func appendInterpolation(raw value: String) {
-        // No escaping
+
         result += value
     }
 

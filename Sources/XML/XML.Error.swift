@@ -1,37 +1,22 @@
-/// XML.Error.swift
-/// swift-xml
-///
-/// User-friendly XML error types
-
 extension XML {
-    /// XML parsing and processing errors.
-    ///
-    /// These errors provide user-friendly messages for common XML issues.
+
     public enum Error: Swift.Error, Sendable, Hashable {
-        /// Syntax error in XML.
+
         case syntax(message: String, line: Int, column: Int)
 
-        /// Encoding error.
         case encoding(String)
 
-        /// Depth limit exceeded.
         case depth(limit: Int)
 
-        /// Empty input.
         case empty
 
-        /// Element not found.
         case elementNotFound(name: String)
 
-        /// Attribute not found.
         case attributeNotFound(name: String)
 
-        /// Type conversion error.
         case typeMismatch(expected: String, got: String)
     }
 }
-
-// MARK: - Error CustomStringConvertible
 
 extension XML.Error: CustomStringConvertible {
     public var description: String {

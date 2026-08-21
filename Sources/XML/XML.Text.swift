@@ -1,15 +1,5 @@
 import W3C_XML
 
-/// Nested accessor for XML text content access.
-///
-/// Provides access to text content with variants for recursive extraction.
-///
-/// ## Usage
-///
-/// ```swift
-/// xml.user.name.text()      // String - direct text content
-/// xml.user.name.text.all    // String - all text including descendants
-/// ```
 extension XML {
     public struct Text: Sendable {
         @usableFromInline
@@ -22,30 +12,21 @@ extension XML {
     }
 }
 
-// MARK: - Primary Access (callAsFunction)
-
 extension XML.Text {
-    /// Direct text content of this element.
-    ///
-    /// - Returns: The text content, or empty string if none.
+
     @inlinable
     public func callAsFunction() -> String {
         xml.raw.textContent
     }
 }
 
-// MARK: - All Text (Recursive)
-
 extension XML.Text {
-    /// All text content including nested elements.
-    ///
-    /// Recursively collects text from this element and all descendants.
+
     @inlinable
     public var all: String {
         collect(xml.raw)
     }
 
-    /// Collects all text from an element and its descendants.
     @usableFromInline
     internal func collect(_ element: W3C_XML.Element) -> String {
         var result = ""
@@ -68,15 +49,8 @@ extension XML.Text {
     }
 }
 
-// MARK: - Instance Accessor
-
 extension XML {
-    /// Access text content.
-    ///
-    /// ```swift
-    /// xml.user.name.text()      // String - direct text
-    /// xml.user.name.text.all    // String - all text including descendants
-    /// ```
+
     @inlinable
     public var text: Text {
         Text(self)

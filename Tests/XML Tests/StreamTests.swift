@@ -1,6 +1,3 @@
-/// StreamTests.swift
-/// swift-xml
-
 import Testing
 
 @testable import XML
@@ -10,8 +7,6 @@ struct `Stream Tests` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
     @Suite struct Integration {}
-
-    // MARK: - ND XML Streaming
 
     @Test
     func `Parse ND XML stream`() async throws {
@@ -141,8 +136,6 @@ struct `Stream Tests` {
         #expect(ids == ["1", "2"])
     }
 
-    // MARK: - Single Document Async Parse
-
     @Test
     func `Parse single document from async bytes`() async throws {
         let input = """
@@ -217,11 +210,9 @@ struct `Stream Tests` {
             _ = try await XML.parse(collecting: bytes)
             Issue.record("Expected error for empty input")
         } catch {
-            // Expected
+
         }
     }
-
-    // MARK: - XML.Serializable Async
 
     @Test
     func `Deserialize from async bytes`() async throws {
@@ -236,7 +227,6 @@ struct `Stream Tests` {
             continuation.finish()
         }
 
-        // Parse then deserialize to avoid Plist/XML ambiguity
         let doc = try await XML.parse(collecting: bytes)
         let value = try Int.deserialize(doc.root)
 
@@ -244,10 +234,6 @@ struct `Stream Tests` {
     }
 }
 
-/// Iterates through `AsyncSequence` protocol dispatch: the concrete
-/// iterator member lives in swift-async's internal-only Async Stream Core
-/// module, so direct `for await` over the concrete stream type fails
-/// MemberImportVisibility.
 private func collect<S: AsyncSequence>(_ sequence: S) async throws(S.Failure) -> [S.Element] {
     var elements: [S.Element] = []
     for try await element in sequence { elements.append(element) }

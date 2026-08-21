@@ -1,70 +1,31 @@
-/// XML.Serializable.swift
-/// swift-xml
-///
-/// XML serialization protocol
-
 extension XML {
-    /// A type that can be serialized to/from XML.
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// struct Person: XML.Serializable {
-    ///     var name: String
-    ///     var age: Int
-    ///
-    ///     static func serialize(_ value: Person) -> XML {
-    ///         XML.element("person", children: [
-    ///             XML.element("name", text: value.name),
-    ///             XML.element("age", text: String(value.age))
-    ///         ])
-    ///     }
-    ///
-    ///     static func deserialize(_ xml: XML) throws(XML.Error) -> Person {
-    ///         guard let nameXML = xml.children.first["name"],
-    ///               let name = String?(nameXML) else {
-    ///             throw .elementNotFound(name: "name")
-    ///         }
-    ///         guard let ageXML = xml.children.first["age"],
-    ///               let age = Int(ageXML) else {
-    ///             throw .elementNotFound(name: "age")
-    ///         }
-    ///         return Person(name: name, age: age)
-    ///     }
-    /// }
-    /// ```
+
     public protocol Serializable: Sendable {
-        /// Serializes a value to XML.
+
         static func serialize(_ value: Self) -> XML
 
-        /// Deserializes XML to a value.
         static func deserialize(_ xml: XML) throws(XML.Error) -> Self
     }
 }
 
-// MARK: - Serializable Convenience Methods
-
 extension XML.Serializable {
-    /// The XML representation of this value.
+
     @inlinable
     public var xml: XML {
         Self.serialize(self)
     }
 
-    /// Creates a value from XML.
     @inlinable
     public init(xml: XML) throws(XML.Error) {
         self = try Self.deserialize(xml)
     }
 
-    /// Creates a value from an XML string.
     @inlinable
     public init(xmlString: String) throws(XML.Error) {
         let xml = try XML.fragment(xmlString)
         self = try Self.deserialize(xml)
     }
 
-    /// Creates a value from UTF-8 encoded XML bytes.
     @inlinable
     public init<Bytes>(xmlBytes: Bytes) throws(XML.Error)
     where Bytes: Swift.Collection<UInt8>, Bytes: Sendable {
@@ -72,20 +33,16 @@ extension XML.Serializable {
         self = try Self.deserialize(doc.root)
     }
 
-    /// Converts this value to an XML string.
     @inlinable
     public func xmlString(pretty: Bool = false) -> String {
         xml.serialize(pretty: pretty)
     }
 
-    /// Converts this value to UTF-8 encoded XML bytes.
     @inlinable
     public func xmlBytes(pretty: Bool = false) -> [UInt8] {
         xml.serialize.bytes(pretty: pretty)
     }
 }
-
-// MARK: - String Conformance
 
 extension String: XML.Serializable {
     @inlinable
@@ -98,8 +55,6 @@ extension String: XML.Serializable {
         String(xml)
     }
 }
-
-// MARK: - Int Conformance
 
 extension Int: XML.Serializable {
     @inlinable
@@ -116,8 +71,6 @@ extension Int: XML.Serializable {
     }
 }
 
-// MARK: - Double Conformance
-
 extension Double: XML.Serializable {
     @inlinable
     public static func serialize(_ value: Double) -> XML {
@@ -133,8 +86,6 @@ extension Double: XML.Serializable {
     }
 }
 
-// MARK: - Bool Conformance
-
 extension Bool: XML.Serializable {
     @inlinable
     public static func serialize(_ value: Bool) -> XML {
@@ -148,7 +99,7 @@ extension Bool: XML.Serializable {
         case "false": return false
 
         default:
-            // Also check text content
+
             if let value = Bool(xml) {
                 return value
             }
@@ -156,8 +107,6 @@ extension Bool: XML.Serializable {
         }
     }
 }
-
-// MARK: - Optional Conformance
 
 extension Optional: XML.Serializable where Wrapped: XML.Serializable {
     @inlinable
@@ -179,8 +128,6 @@ extension Optional: XML.Serializable where Wrapped: XML.Serializable {
         return try Wrapped.deserialize(xml)
     }
 }
-
-// MARK: - Array Conformance
 
 extension Array: XML.Serializable where Element: XML.Serializable {
     @inlinable
